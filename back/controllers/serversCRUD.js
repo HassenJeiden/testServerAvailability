@@ -46,10 +46,10 @@ const DeleteServer = async (req, res) => {
 
 const UpdateServer = async (req, res) => {
     try {
-        const { uriurl, addedBy, verified, _id } = req.body
+        const { uriurl, addedBy, sendTo, _id } = req.body
         const useredit = await Server.findOneAndUpdate({ '_id': _id },
             {
-                'uriurl': uriurl, 'addedBy': addedBy, 'verified': verified,'datetime':date_ob
+                'uriurl': uriurl, 'addedBy': addedBy, 'sendTo': sendTo,'datetime':date_ob
             })
         res.status(201).json({ message: 'update done successffly', useredit })
     } catch {

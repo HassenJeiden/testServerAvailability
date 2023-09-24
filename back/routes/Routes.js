@@ -3,7 +3,7 @@ var { testServerAvailability } = require('../controllers/avalabilityFunction')
 var { CeateUser, ReadUsers, DeleteUser, UpdateUser } = require('../controllers/UsersCRUD')
 var { CeateServer, ReadServer, UpdateServer, DeleteServer } = require('../controllers/serversCRUD')
 var { createTest,readTests,deleteTest } = require('../controllers/testCRUD')
-var { sendEmail } = require('../controllers/sendEMail')
+//var { sendEmail } = require('../controllers/sendEMail')
 //user routes
 routes.get('/IsAvailabal', testServerAvailability)
 routes.post('/adduser', CeateUser)
@@ -19,7 +19,7 @@ routes.post('/deleteserver', DeleteServer)
 routes.post('/testing', createTest)
 routes.get('/consultingTests', readTests)
 routes.post('/deletetest', deleteTest)
-routes.post('/sendemail', sendEmail)
+//routes.post('/sendemail', sendEmail)
 
 
 
