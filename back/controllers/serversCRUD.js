@@ -5,15 +5,16 @@ var date_ob = new Date()
 
 const CeateServer = async (req, res) => {
     try {
-        const { uriurl, addedBy, verified } = req.body
+        const { uriurl, addedBy, sendTo } = req.body
         
         const findServer = await Server.findOne({ "uriurl": uriurl })
+        console.log(sendTo)
         if (!findServer) {
             const newServer = await Server.create({
                 "uriurl": uriurl,
                 'addedBy': addedBy,
                 'datetime': date_ob,
-                'verified': verified
+                'sendTo': sendTo
             })
             const all = await Server.find()
             res.status(201).json({ msg: "Server created succussfully", newServer, all })

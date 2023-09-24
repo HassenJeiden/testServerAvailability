@@ -28,6 +28,7 @@ const sendEmail = async (req, res) => {
         transporter_smtp.verify(function (error, success) {
             if (error) {
                 console.log(error);
+
             } else {
                 console.log('Server validation done and ready for messages.')
             }
@@ -36,6 +37,7 @@ const sendEmail = async (req, res) => {
         transporter_smtp.sendMail(email, function (error, success) {
             if (error) {
                 console.log(error);
+                res.status(500).json({ message: 'Email sent successffuly',error })
             } else {
                 console.log('NodeMailer Email sent: ' + success.response);
             }

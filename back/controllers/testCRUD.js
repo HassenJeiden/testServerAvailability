@@ -9,7 +9,7 @@ const createTest = async (req, res) => {
     try {
         const { SERVER_URL, user } = req.body
         const response = await axios.get(SERVER_URL);
-        axios.get(SERVER_URL).then(response => { console.log(response.statusText) })
+        axios.get(SERVER_URL).then(response => {  console.log(response.statusText) })
         if (response.status === 200) {
             const goodTest = await Tests.create({
                 'server': SERVER_URL,
