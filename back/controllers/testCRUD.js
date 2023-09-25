@@ -1,5 +1,7 @@
 const axios = require('axios')
 const Tests = require('../models/test')
+const Server = require('../models/UriUrl')
+
 var date_ob = new Date()
 
 
@@ -9,14 +11,26 @@ const createTest = async (req, res) => {
     try {
         const { SERVER_URL, user } = req.body
         const response = await axios.get(SERVER_URL);
-        axios.get(SERVER_URL).then(response => {  console.log(response.statusText) })
+        const Rmessage = response.status + ':' + ' ' + response.statusText
+        axios.get(SERVER_URL).then(response => { console.log(response.statusText) })
         if (response.status === 200) {
             const goodTest = await Tests.create({
                 'server': SERVER_URL,
                 'user': user,
                 'datetime': response.headers.date,
-                'resMessage': response.status + ':' + ' ' + response.statusText
+                'resMessage':  Rmessage
             })
+            const Fserver = await Server.findOne({ 'uriurl': SERVER_URL })
+            console.log(Fserver)
+            console.log(Fserver.sendTo)
+            const email = {
+                from: 'hsnjdn@hotmail.com',
+                to: Fserver.sendTo,
+                subject: 'About your server avalability',
+                text: SERVER_URL +' avalability is ' + Rmessage
+            }
+            console.log(email)
+            const sendEmail = require('./sendEMail').sendEmail(email)
             res.status(200).json({ message: 'Server is available.', goodTest })
         } else { console.log(response.statusText) }
     } catch {

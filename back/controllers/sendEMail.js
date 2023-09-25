@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer')
 const dotenv = require('dotenv').config()
 
 
-const sendEmail = (email) => {
+
     const transporter_smtp = nodemailer.createTransport({
         host: process.env.HOST,
         port: process.env.HOST_PORT,
@@ -29,6 +29,7 @@ const sendEmail = (email) => {
             console.log('Server validation done and ready for messages.')
         }
     });
+    module.exports.sendEmail = function (email)  {
     transporter_smtp.sendMail(email, function (error, success) {
         if (error) {
             console.log(error);
@@ -37,9 +38,4 @@ const sendEmail = (email) => {
         }
     })
 
-
 }
-
-
-
-module.exports = sendEmail()
