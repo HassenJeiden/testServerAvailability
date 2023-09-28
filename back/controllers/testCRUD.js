@@ -1,10 +1,7 @@
 const axios = require('axios')
 const Tests = require('../models/test')
 const Server = require('../models/UriUrl')
-
 var date_ob = new Date()
-
-
 
 
 const createTest = async (req, res) => {
@@ -12,7 +9,6 @@ const createTest = async (req, res) => {
         const { SERVER_URL, user } = req.body
         const response = await axios.get(SERVER_URL);
         const Rmessage = response.status + ':' + ' ' + response.statusText
-        axios.get(SERVER_URL).then(response => { console.log(response.statusText) })
         if (response.status === 200) {
             const goodTest = await Tests.create({
                 'server': SERVER_URL,
@@ -20,16 +16,13 @@ const createTest = async (req, res) => {
                 'datetime': response.headers.date,
                 'resMessage':  Rmessage
             })
-            const Fserver = await Server.findOne({ 'uriurl': SERVER_URL })
-            console.log(Fserver)
-            console.log(Fserver.sendTo)
-            const email = {
+            const FserverI = await Server.findOne({ 'uriurl': SERVER_URL })
+             const email = {
                 from: 'hsnjdn@hotmail.com',
-                to: Fserver.sendTo,
-                subject: 'About your server avalability',
+                to: FserverI.sendTo,
+                subject: 'Daly check avalability',
                 text: SERVER_URL +' avalability is ' + Rmessage
             }
-            console.log(email)
             const sendEmail = require('./sendEMail').sendEmail(email)
             res.status(200).json({ message: 'Server is available.', goodTest })
         } else { console.log(response.statusText) }
@@ -41,6 +34,15 @@ const createTest = async (req, res) => {
             'datetime': date_ob.toString(),
             'resMessage': '404: Not Found'
         })
+        const FserverII = await Server.findOne({ 'uriurl': SERVER_URL })
+        console.log(FserverII.sendTo)
+        const emailAlert = {
+           from: 'hsnjdn@hotmail.com',
+           to: FserverII.sendTo,
+           subject: 'Daly check avalability',
+           text: SERVER_URL+' is Not Found code(404)'
+       }
+       const sendAlert = require('./sendEMail').sendEmail(emailAlert)
         res.status(500).json({ message: 'Server Not found 404', badTest })
     }
 }
