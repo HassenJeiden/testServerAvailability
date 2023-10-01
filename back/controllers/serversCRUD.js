@@ -30,7 +30,7 @@ const ReadServer = async (req, res) => {
         const all = await Server.find()
         res.status(201).json({ message: 'Server Lists following', all })
     } catch {
-        res.status(500).json({ message: "somthing went wrong", error: error.message })
+        res.status(500).json({ message: "somthing went wrong" })
     }
 }
 

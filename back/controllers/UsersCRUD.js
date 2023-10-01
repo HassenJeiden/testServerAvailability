@@ -1,6 +1,7 @@
 const User = require('../models/users')
 const dotenv = require('dotenv').config()
 const CryptoJS = require("crypto-js")
+var date_ob = new Date
 
 
 const CeateUser = async (req, res) => {
@@ -10,7 +11,9 @@ const CeateUser = async (req, res) => {
     if (!finduser) {
       const newUser = await User.create({
         'username': username,
-        'password': CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString(), 'usertype': usertype
+        'password': CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString(),
+        'usertype': usertype,
+        'isConnected': date_ob.getHours()
       })
       const all = await User.find()
       res.status(201).json({ msg: "User created succussfully", newUser, all })
@@ -32,8 +35,8 @@ const ReadUsers = async (req, res) => {
 
 const DeleteUser = async (req, res) => {
   try {
-    const { username } = req.body
-    const userdelet = await User.findOneAndDelete({ 'username': username })
+    const { _id } = req.body
+    const userdelet = await User.findOneAndDelete({ '_id': _id })
     res.status(201).json({ messsage: 'user deleted successfuly', userdelet })
   } catch {
     res.status(500).json({ message: 'something went wrong' })
@@ -45,8 +48,10 @@ const UpdateUser = async (req, res) => {
     const { username, password, _id, usertype } = req.body
     const useredit = await User.findOneAndUpdate({ '_id': _id },
       {
-        'username': username, 'password': CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString(),
-        'usertype': usertype
+        'username': username,
+        'password': CryptoJS.AES.encrypt(password, process.env.PASS_SEC).toString(),
+        'usertype': usertype,
+        "isConnected":'00'
       })
     res.status(201).json({ message: 'update done successffly', useredit })
   } catch {

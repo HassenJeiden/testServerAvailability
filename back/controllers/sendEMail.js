@@ -11,16 +11,7 @@ const dotenv = require('dotenv').config()
             pass: process.env.PASSWORD_APPLICATION
         }
     });
-    /*const email = {
-        from: 'hsnjdn@hotmail.com',
-        to: userEmails,
-        subject: 'About your server avalability',
-        text: {
-            data: 10,
-            set: function (Rmessage) {
-                this.data = Rmessage;
-            }
-        }}*/
+
     transporter_smtp.verify(function (error, success) {
         if (error) {
             console.log(error);
