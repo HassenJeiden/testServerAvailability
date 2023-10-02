@@ -3,7 +3,7 @@ var { testServerAvailability } = require('../controllers/avalabilityFunction')
 var { CeateUser, ReadUsers, DeleteUser, UpdateUser } = require('../controllers/UsersCRUD')
 var { CeateServer, ReadServer, UpdateServer, DeleteServer } = require('../controllers/serversCRUD')
 var { createTest,readTests,deleteTest } = require('../controllers/testCRUD')
-const { isLogged } = require('../controllers/login')
+const { isReg, isLogged } = require('../controllers/login')
 
 //user routes
 routes.get('/IsAvailabal', testServerAvailability)
@@ -13,15 +13,15 @@ routes.post('/edituser', UpdateUser)
 //server routes
 routes.post('/deleteuser', DeleteUser)
 routes.post('/addserver', CeateServer)
-routes.get('/allservers', ReadServer)
+routes.get('/allservers',isLogged, ReadServer)
 routes.post('/editserver', UpdateServer)
 routes.post('/deleteserver', DeleteServer)
 //tests routes
-routes.post('/testing', createTest)
+routes.post('/testing',createTest)
 routes.get('/consultingTests', readTests)
 routes.post('/deletetest', deleteTest)
 //loggin
-routes.post('/loggin',isLogged)
+routes.post('/loggin',isReg)
 
 
 
