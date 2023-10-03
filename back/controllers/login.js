@@ -3,21 +3,24 @@ const dotenv = require('dotenv').config()
 const CryptoJS = require("crypto-js")
 const env = require('dotenv').config()
 const date_ob = new Date
+const H = date_ob.getHours().toString()
+const D = date_ob.getUTCDate().toString()
+const isConnected = D + H
 
 
 
-const isReg = async (req, res) => {
+const loging = async (req, res) => {
     try {
         const { username, password } = req.body
         var verefie = await TheUser.findOne({ "username": username })
         if (verefie) {
             const checkPW = CryptoJS.AES.decrypt(verefie.password, process.env.PASS_SEC).toString(CryptoJS.enc.Utf8)
-            console.log(checkPW)
             if (checkPW === password) {
-                const isConnected = parseInt(date_ob.getHours())
+                const lg = parseInt(isConnected)
+                const lgg =lg +2
                 const logged = await TheUser.findOneAndUpdate({ "username": username },
                     {
-                        'isConnected': isConnected + 2
+                        'isConnected': lgg.toString()
                     })
                 res.status(200).json({ message: 'legged successfully' })
             } else {
@@ -29,24 +32,33 @@ const isReg = async (req, res) => {
         res.status(401).json({ message: 'something went wrong' })
     }
 }
-const isLogged = async (req, res, next) => {
+const isLoged = async (req, res, next) => {
     try {
         const { _id } = req.body
-        console.log(_id)
         const thelog = await TheUser.findOne({ '_id': _id })
-        console.log(thelog.isConnected)
-        if (parseInt(thelog.isConnected) > parseInt(date_ob.getHours().toString())) {
-            console.log(date_ob.getHours().toString())
+        if (parseInt(thelog.isConnected) > parseInt(isConnected)) {
+            next()
         } else {
-            res.send('session expired login again')
+            res.redirect('http://localhost:5000/api/home')
+            console.log('redirect to login')
         }
-        next()
+
     } catch {
         res.status(500).json({ message: 'somthing went wrong' })
     }
 }
+const logout = async (req, res) => {
+    try {
+        const { _id } = req.body
+        const userOut = await TheUser.findOneAndUpdate({ '_id': _id }, { 'isConnected': '00' })
+        res.status(200).json({ message: 'logged out', userOut })
+    } catch {
+        res.status(500).json({ message: 'somthing went wrong' })
+    }
+}
+const Home = async (req, res) => {
+    res.send('go to login page')
+}
 
 
-
-
-module.exports = { isReg, isLogged }
+module.exports = { loging, isLoged, logout, Home }
